@@ -16,6 +16,7 @@ public class Poem {
     private List<String> partsOfSpeech = new ArrayList<>();
     private List<String> finalPoemArray = new ArrayList<>();
     private Collection<String> values = startingText.values();
+    private Map<String, String> finalPoemMap = new LinkedHashMap<>();
 
     public void clearLists(){
         startingText.clear();
@@ -132,8 +133,6 @@ public class Poem {
         return poem;
     }
 
-
-
     public void generateText(List<String> thePoemText, int randomNum) {
 
         this.partsOfSpeech.addAll(values);
@@ -141,6 +140,9 @@ public class Poem {
         for (int i = 0; i < partsOfSpeech.size() - 1; i += randomNum) {
             if (partsOfSpeech.get(i) != partsOfSpeech.get(i + 1)) {
                 if(partsOfSpeech.get(i).startsWith("V") && partsOfSpeech.get(i + 1).startsWith("N")){
+                    continue;
+                }
+                if(finalPoemArray.contains(partsOfSpeech.get(i))){
                     continue;
                 }
                 if (thePoemText.get(i).startsWith("'")) {
@@ -161,6 +163,75 @@ public class Poem {
 
         }
     }
+
+
+
+
+
+    public void generatePoemMap(Map<String, String> thePoemText, int randomNum){
+
+        int count = 0;
+        for(Map.Entry<String, String> entry: thePoemText.entrySet()){
+            if(finalPoemMap.containsValue(entry.getValue())){
+                continue;
+            }
+            count ++;
+            if (count % randomNum == 0) {
+                continue; // Skip this entry
+            }
+            if (entry.getValue().startsWith("'")) {
+                continue;
+            }
+            if(entry.getValue().equals("n't")){
+                finalPoemMap.put(entry.getKey(), "not");
+            }
+            if(entry.getValue().equals("'m")){
+                finalPoemMap.put(entry.getKey(), "am");
+            }
+            if(entry.getValue().equals(")") || entry.getValue().equals("(") || entry.getValue().equals("\"")){
+                continue;
+            }
+
+            this.finalPoemMap.put(entry.getKey(), entry.getValue());
+
+        }
+
+    }
+
+    public String poemOutput(List<String> startingPoem){
+
+        int randomNum;
+
+        if (startingPoem != null) {
+            if (startingPoem.size() > 200) {
+                randomNum = (int) ((Math.random() * 9) + 12);
+                generatePoemMap(startingText, randomNum);
+
+            } else if (startingPoem.size() > 100) {
+
+                randomNum = (int) ((Math.random() * 5) + 6);
+                generatePoemMap(startingText, randomNum);
+            } else if (startingPoem.size() > 15) {
+
+                randomNum = (int) ((Math.random() * 2) + 2);
+                generatePoemMap(startingText, randomNum);
+            } else {
+                System.out.println("Text too short to generate poem, please enter a longer text.");
+            }
+
+        } else {
+            System.out.println("You did not enter any text.");
+        }
+
+        String poem= "";
+        for (Map.Entry<String,String> word : finalPoemMap.entrySet()) {
+            poem += (word.getKey() + " ");
+        }
+        return poem;
+    }
+
+
+
 
 }
 

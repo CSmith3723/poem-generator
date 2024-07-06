@@ -5,6 +5,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class Window extends JFrame implements ActionListener {
 
@@ -83,7 +84,12 @@ public class Window extends JFrame implements ActionListener {
 
             userPoem.tagText(getInputText());
 
-            generatedPoemOutput.setText(userPoem.poemOutputString(userPoem.getStartingPoem()));
+            List<String> startingPoem = userPoem.getStartingPoem();
+            System.out.println(startingPoem);
+            String poem = userPoem.poemOutput(startingPoem);
+            System.out.println(poem);
+
+            generatedPoemOutput.setText(poem);
 
             userPoem.clearLists();
         }
